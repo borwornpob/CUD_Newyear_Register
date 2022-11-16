@@ -2,8 +2,11 @@
   "name": "cud-newyear-register",
   "private": true,
   "version": "0.0.0",
+  "homepage": "https://borwornpob.github.io/CUD_Newyear_Register",
   "type": "module",
   "scripts": {
+    "predeploy": "npm run build",
+    "deploy": "gh-pages -d build",
     "dev": "vite --host",
     "build": "vite build",
     "preview": "vite preview"
