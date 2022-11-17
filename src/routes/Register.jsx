@@ -1,6 +1,25 @@
 import React, { useState } from "react";
 import { Button, Container, Form, Modal, Alert } from "react-bootstrap";
 import { supabase } from "../helper/supabaseClient";
+import {
+  FormControl,
+  FormLabel,
+  FormHelperText,
+  FormErrorMessage,
+  Input,
+  Textarea,
+  Select,
+  Checkbox,
+  Radio,
+  RadioGroup,
+  Stack,
+  Box,
+  Flex,
+  Heading,
+  Link,
+  Spacer,
+  useToast,
+} from "@chakra-ui/react";
 
 export default function Register() {
   const [name, setName] = useState("");
