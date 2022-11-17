@@ -148,14 +148,13 @@ export default function ChakraRegister() {
       <VStack mt={2}>
         <Heading>ลงทะเบียนเพื่อรับบัตรเข้างานได้ที่นี่!</Heading>
         <FormControl>
-          <FormLabel>ชื่อและนามสกุล</FormLabel>
+          <FormLabel>ชื่อและนามสกุล (กรุณากรอกเป็นภาษาไทยเท่านั้น)</FormLabel>
           <Input
             type="text"
             placeholder="Name"
             value={name}
             onChange={(e) => setName(e.target.value)}
           />
-          <FormHelperText>กรุณากรอกเป็นภาษาไทยเท่านั้น</FormHelperText>
         </FormControl>
         <FormControl isInvalid={!validateEmail(email)}>
           <FormLabel>อีเมล</FormLabel>
@@ -165,23 +164,21 @@ export default function ChakraRegister() {
             value={email}
             onChange={(e) => setEmail(e.target.value)}
           />
-          {validateEmail(email) ? (
-            <FormHelperText>กรุณากรอกอีเมลของท่าน</FormHelperText>
-          ) : (
+          {validateEmail(email) ? null : (
             <FormErrorMessage>อีเมลไม่ถูกต้อง</FormErrorMessage>
           )}
         </FormControl>
         <FormControl isInvalid={!validateID(id)}>
-          <FormLabel>เลขประจำตัวบัตรประชาชน</FormLabel>
+          <FormLabel>
+            เลขประจำตัวบัตรประชาชน (กรอกตัวเลข 13 หลักเท่านั้น)
+          </FormLabel>
           <Input
             type="text"
             placeholder="ID"
             value={id}
             onChange={(e) => setId(e.target.value)}
           />
-          {validateID(id) ? (
-            <FormHelperText>กรอกตัวเลข 13 หลักเท่านั้น</FormHelperText>
-          ) : (
+          {validateID(id) ? null : (
             <FormErrorMessage>เลขบัตรประชาชนไม่ถูกต้อง</FormErrorMessage>
           )}
         </FormControl>
@@ -200,15 +197,19 @@ export default function ChakraRegister() {
           </Select>
         </FormControl>
         {personStatus === "3" && (
-          <FormControl>
-            <FormLabel>โปรดระบุเลขประจำตัวบัตรประชาชนของนักเรียน</FormLabel>
+          <FormControl isInvalid={!validateID(studentId)}>
+            <FormLabel>
+              โปรดระบุเลขประจำตัวบัตรประชาชนของนักเรียนในปกครอง
+            </FormLabel>
             <Input
               type="text"
               placeholder="Student ID"
               value={studentId}
               onChange={(e) => setStudentId(e.target.value)}
             />
-            <FormHelperText>กรอกตัวเลข 13 หลักเท่านั้น</FormHelperText>
+            {validateID(studentId) ? null : (
+              <FormErrorMessage>เลขบัตรประชาชนไม่ถูกต้อง</FormErrorMessage>
+            )}
           </FormControl>
         )}
         <Container p={0}>
