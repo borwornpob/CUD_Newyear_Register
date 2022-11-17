@@ -29,7 +29,7 @@ export default function Header() {
 
         <HStack as="nav" spacing="5" display={{ base: "none", md: "flex" }}>
           {data.map((item, i) => (
-            <Link as={routerLink} to={item.href}>
+            <Link as={routerLink} to={item.href} key={i}>
               {item.label}
             </Link>
           ))}
