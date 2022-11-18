@@ -27,6 +27,7 @@ import {
   DarkMode,
 } from "@chakra-ui/react";
 import useWindowDimensions from "../hooks/dimensions";
+import { plunk } from "../helper/plunk";
 
 export default function ChakraRegister() {
   const [name, setName] = useState("");
@@ -120,6 +121,13 @@ export default function ChakraRegister() {
             setVariant("error");
             resetState();
           } else {
+            await plunk.events.publish({
+              email: email,
+              event: "register",
+              data: {
+                name: name,
+              },
+            });
             setStatus("ลงทะเบียนสำเร็จ!");
             setVariant("success");
             resetState();
