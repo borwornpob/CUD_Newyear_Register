@@ -30,18 +30,6 @@ import useWindowDimensions from "../hooks/dimensions";
 import { plunk } from "../helper/plunk";
 
 export default function ChakraRegister() {
-  const [name, setName] = useState("");
-  const [email, setEmail] = useState("");
-  const [id, setId] = useState("");
-  const [status, setStatus] = useState("");
-  const [personStatus, setPersonStatus] = useState("");
-  const [variant, setVariant] = useState("success");
-  const [studentId, setStudentId] = useState("");
-  const [password, setPassword] = useState("");
-
-  const { width } = useWindowDimensions();
-
-  //generate random passowrd
   const generatePassword = () => {
     const length = 8,
       charset =
@@ -50,10 +38,21 @@ export default function ChakraRegister() {
     for (let i = 0, n = charset.length; i < length; ++i) {
       retVal += charset.charAt(Math.floor(Math.random() * n));
     }
-    setPassword(retVal);
+    return retVal;
   };
 
-  const resetState = () => {
+  const [name, setName] = useState("");
+  const [email, setEmail] = useState("");
+  const [id, setId] = useState("");
+  const [status, setStatus] = useState("");
+  const [personStatus, setPersonStatus] = useState("");
+  const [variant, setVariant] = useState("success");
+  const [studentId, setStudentId] = useState("");
+  const [password, setPassword] = useState(generatePassword());
+
+  const { width } = useWindowDimensions();
+
+  const resetState = async () => {
     setName("");
     setEmail("");
     setId("");
@@ -101,6 +100,7 @@ export default function ChakraRegister() {
   };
 
   const handleSubmit = async (e) => {
+    console.log(password);
     if (await checkStudentId(studentId, personStatus)) {
       //Check all the form fields are filled
       if (name && validateEmail(email) && validateID(id) && personStatus) {
@@ -119,7 +119,6 @@ export default function ChakraRegister() {
         }
         //If the user doesn't exist, create a new user
         if (data.length === 0) {
-          generatePassword();
           const { error } = await supabase.from("Users").insert([
             {
               id: id,
