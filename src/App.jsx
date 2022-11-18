@@ -10,6 +10,7 @@ import ChakraRegister from "./routes/ChakraRegister";
 import theme from "./helper/theme";
 import Header from "./components/Header";
 import Footer from "./components/Footer";
+import DeleteTicket from "./routes/DeleteTicket";
 
 export default function App() {
   return (
@@ -21,6 +22,10 @@ export default function App() {
           <Route path="/tickets" element={<Ticket />} />
           <Route path="*" element={<ErrorPage />} />
           <Route path="/chakra" element={<ChakraRegister />} />
+          <Route
+            path="/deleteTicket/:id/:password"
+            element={<DeleteTicket />}
+          />
         </Routes>
         <Footer />
       </BrowserRouter>

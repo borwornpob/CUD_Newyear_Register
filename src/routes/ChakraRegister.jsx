@@ -37,8 +37,21 @@ export default function ChakraRegister() {
   const [personStatus, setPersonStatus] = useState("");
   const [variant, setVariant] = useState("success");
   const [studentId, setStudentId] = useState("");
+  const [password, setPassword] = useState("");
 
   const { width } = useWindowDimensions();
+
+  //generate random passowrd
+  const generatePassword = () => {
+    const length = 8,
+      charset =
+        "abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789";
+    var retVal = "";
+    for (let i = 0, n = charset.length; i < length; ++i) {
+      retVal += charset.charAt(Math.floor(Math.random() * n));
+    }
+    setPassword(retVal);
+  };
 
   const resetState = () => {
     setName("");
@@ -82,6 +95,11 @@ export default function ChakraRegister() {
     }
   };
 
+  //interpolate root url with path
+  const interpolateUrl = (path) => {
+    return `${window.location.origin}${path}`;
+  };
+
   const handleSubmit = async (e) => {
     if (await checkStudentId(studentId, personStatus)) {
       //Check all the form fields are filled
@@ -101,12 +119,14 @@ export default function ChakraRegister() {
         }
         //If the user doesn't exist, create a new user
         if (data.length === 0) {
+          generatePassword();
           const { error } = await supabase.from("Users").insert([
             {
               id: id,
               name: name,
               email: email,
               status: personStatus,
+              password: password,
             },
           ]);
           if (personStatus == "3") {
@@ -126,6 +146,7 @@ export default function ChakraRegister() {
               event: "register",
               data: {
                 name: name,
+                linkToDelete: interpolateUrl(`/deleteTicket/${id}/${password}`),
               },
             });
             setStatus("ลงทะเบียนสำเร็จ!");

@@ -18,7 +18,7 @@ export default function MobileDrawer() {
   const data = [
     {
       label: "ลงทะเบียน",
-      href: "/chakra",
+      href: "/",
     },
     {
       label: "ค้นหาบัตรเข้างาน",
