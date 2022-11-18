@@ -79,6 +79,10 @@ export default function Ticket() {
     "ศิษย์เก่าโรงเรียนสาธิตจุฬาฯ",
   ];
 
+  const interpolateUrl = (path) => {
+    return `${window.location.origin}${path}`;
+  };
+
   return (
     <Container>
       <VStack>
@@ -118,7 +122,7 @@ export default function Ticket() {
             <Card maxW="md" boxShadow="md">
               <CardBody>
                 <VStack p={0}>
-                  <QRCode value={data[0].id.toString()} />
+                  <QRCode value={interpolateUrl(`/checkAtFront/${id}`)} />
                   <Heading size="md">{data[0].name}</Heading>
                   <Text>{data[0].email}</Text>
                   <Text>{statusText[data[0].status]}</Text>

@@ -11,6 +11,7 @@ import theme from "./helper/theme";
 import Header from "./components/Header";
 import Footer from "./components/Footer";
 import DeleteTicket from "./routes/DeleteTicket";
+import CheckAtFront from "./routes/CheckAtFront";
 
 export default function App() {
   return (
@@ -26,6 +27,7 @@ export default function App() {
             path="/deleteTicket/:id/:password"
             element={<DeleteTicket />}
           />
+          <Route path="/checkAtFront/:id" element={<CheckAtFront />} />
         </Routes>
         <Footer />
       </BrowserRouter>
