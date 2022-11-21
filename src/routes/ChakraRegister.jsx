@@ -57,6 +57,7 @@ export default function ChakraRegister() {
     setEmail("");
     setId("");
     setPersonStatus("");
+    setStudentId("");
   };
 
   const validateEmail = (email) => {
@@ -132,6 +133,7 @@ export default function ChakraRegister() {
             const { error2 } = await supabase.from("studentGuardian").insert([
               {
                 id: studentId,
+                id_guardian: id,
               },
             ]);
           }

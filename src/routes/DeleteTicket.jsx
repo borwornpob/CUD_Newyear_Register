@@ -88,7 +88,11 @@ export default function DeleteTicket() {
         .from("Users")
         .delete()
         .eq("id", id);
-      if (error) {
+      const { data2, error2 } = await supabase
+        .from("studentGuardian")
+        .delete()
+        .eq("id_guardian", id);
+      if (error || error2) {
         setStatus("Error");
         resetState();
       } else {
