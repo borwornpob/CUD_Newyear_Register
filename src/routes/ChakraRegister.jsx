@@ -95,6 +95,8 @@ export default function ChakraRegister() {
     }
   };
 
+  //TODOs: checkStaffID (have to get staff id database first)
+
   //interpolate root url with path
   const interpolateUrl = (path) => {
     return `${window.location.origin}${path}`;
