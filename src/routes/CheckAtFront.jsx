@@ -47,9 +47,9 @@ export default function CheckAtFront() {
 
   const fetchData = async () => {
     const { data, error } = await supabase
-      .from("Users")
+      .from("registered")
       .select("*")
-      .eq("id", id);
+      .eq("email", id);
     if (error) {
       setStatus("Error");
     }
@@ -73,6 +73,7 @@ export default function CheckAtFront() {
     "ผู้ปกครอง",
     "บุคลากรโรงเรียนสาธิตจุฬาฯ",
     "ศิษย์เก่าโรงเรียนสาธิตจุฬาฯ",
+    "ผู้ติดตามบุคคลากรโรงเรียนสาธิตจุฬาฯ",
   ];
 
   const handleSubmit = async (type) => {
@@ -80,7 +81,7 @@ export default function CheckAtFront() {
       //insert to db
       const { data, error } = await supabase.from("logs").insert([
         {
-          id: id,
+          email: id,
           type: type,
         },
       ]);
@@ -128,10 +129,12 @@ export default function CheckAtFront() {
               <Card boxShadow="md">
                 <CardBody>
                   <VStack p={0} m={0}>
-                    <Heading size="md">{data[0].name}</Heading>
-                    <Text>บัตรประชาชน: {data[0].id}</Text>
+                    <Heading size="md">
+                      {data[0].name} {data[0].surname}
+                    </Heading>
+
                     <Text>{data[0].email}</Text>
-                    <Text>{statusText[data[0].status]}</Text>
+                    <Text>{statusText[data[0].personStatus]}</Text>
                   </VStack>
                 </CardBody>
               </Card>

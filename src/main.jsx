@@ -4,6 +4,7 @@ import "bootstrap/dist/css/bootstrap.min.css";
 import App from "./App";
 import theme from "./helper/theme";
 import { ColorModeScript, ChakraProvider } from "@chakra-ui/react";
+import "@fontsource/chakra-petch";
 
 ReactDOM.createRoot(document.getElementById("root")).render(
   <React.StrictMode>

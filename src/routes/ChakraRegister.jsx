@@ -29,6 +29,12 @@ import {
 import useWindowDimensions from "../hooks/dimensions";
 import { plunk } from "../helper/plunk";
 
+import {
+  validateAlumniStudent,
+  validateCurrentStudent,
+  validateStudentGuardian,
+} from "../helper/validate";
+
 export default function ChakraRegister() {
   const generatePassword = () => {
     const length = 8,
@@ -42,6 +48,7 @@ export default function ChakraRegister() {
   };
 
   const [name, setName] = useState("");
+  const [surname, setSurname] = useState("");
   const [email, setEmail] = useState("");
   const [id, setId] = useState("");
   const [status, setStatus] = useState("");
@@ -49,6 +56,8 @@ export default function ChakraRegister() {
   const [variant, setVariant] = useState("success");
   const [studentId, setStudentId] = useState("");
   const [password, setPassword] = useState(generatePassword());
+  const [studentName, setStudentName] = useState("");
+  const [studentClass, setStudentClass] = useState("");
 
   const { width } = useWindowDimensions();
 
@@ -57,6 +66,8 @@ export default function ChakraRegister() {
     setEmail("");
     setId("");
     setPersonStatus("");
+    setSurname("");
+    setStudentId("");
   };
 
   const validateEmail = (email) => {
@@ -65,109 +76,114 @@ export default function ChakraRegister() {
     return re.test(email);
   };
 
-  const validateID = (id) => {
-    if (id === "") return true;
-    if (id.substring(0, 1) == 0) return false;
-    if (id.length != 13) return false;
-    for (var i = 0, sum = 0; i < 12; i++)
-      sum += parseFloat(id.charAt(i)) * (13 - i);
-    if ((11 - (sum % 11)) % 10 != parseFloat(id.charAt(12))) return false;
-    return true;
-  };
-
-  const checkStudentId = async (studentId, personStatus) => {
-    if (personStatus != "3") return true;
-    if (studentId === "") return true;
-    //Check if studentId count in database is less than 2
-    const { data, error } = await supabase
-      .from("studentGuardian")
-      .select("*")
-      .eq("id", studentId);
-    if (error) {
-      setStatus("error");
-      setVariant("error");
-      return false;
-    }
-    console.log(data.length);
-    if (data.length < 2) {
-      return true;
-    }
-  };
-
   //interpolate root url with path
   const interpolateUrl = (path) => {
     return `${window.location.origin}${path}`;
   };
 
-  const handleSubmit = async (e) => {
-    console.log(password);
-    if (await checkStudentId(studentId, personStatus)) {
-      //Check all the form fields are filled
-      if (name && validateEmail(email) && validateID(id) && personStatus) {
-        e.preventDefault();
-        setStatus("กำลังโหลด...");
-        setVariant("info");
-        //Check if the user already exists
-        const { data, error } = await supabase
-          .from("Users")
-          .select("*")
-          .eq("id", id);
-        if (error) {
-          setStatus("เกิดข้อผิดพลาดที่ไม่ทราบสาเหตุ กรุณาลองใหม่อีกครั้ง");
-          setVariant("error");
-          resetState();
-        }
-        //If the user doesn't exist, create a new user
-        if (data.length === 0) {
-          const { error } = await supabase.from("Users").insert([
-            {
-              id: id,
-              name: name,
-              email: email,
-              status: personStatus,
-              password: password,
-            },
-          ]);
-          if (personStatus == "3") {
-            const { error2 } = await supabase.from("studentGuardian").insert([
-              {
-                id: studentId,
-              },
-            ]);
-          }
-          if (error) {
-            setStatus("เกิดข้อผิดพลาดที่ไม่ทราบสาเหตุ กรุณาลองใหม่อีกครั้ง");
-            setVariant("error");
-            resetState();
-          } else {
-            await plunk.events.publish({
-              email: email,
-              event: "register",
-              data: {
-                name: name,
-                linkToDelete: interpolateUrl(`/deleteTicket/${id}/${password}`),
-              },
-            });
-            setStatus("ลงทะเบียนสำเร็จ!");
-            setVariant("success");
-            resetState();
-          }
-        } else {
-          setStatus("มีบัตรประชาชนนี้อยู่ในระบบแล้ว กรุณาตรวจสอบอีกครั้ง");
-          setVariant("error");
-          resetState();
-        }
-      } else if (!name || !email || !id || !personStatus) {
-        setStatus("กรุณากรอกข้อมูลให้ครบถ้วน");
-        setVariant("error");
-      } else if (!validateEmail(email)) {
-        setStatus("กรุณากรอกอีเมลให้ถูกต้อง");
-        setVariant("error");
-      }
-    } else {
-      setStatus("โควตานักเรียนเต็มแล้ว กรุณาติดต่อผู้ดูแลระบบ");
+  const createUsers = async () => {
+    //check all fields are filled
+    const { data, error } = await supabase
+      .from("registered")
+      .select("*")
+      .eq("email", email);
+    if (error) {
+      setStatus("เกิดข้อผิดพลาดที่ไม่ทราบสาเหตุ กรุณาลองใหม่อีกครั้ง");
       setVariant("error");
       resetState();
+    }
+    //If the user doesn't exist, create a new user
+    if (data.length === 0) {
+      const { error } = await supabase.from("registered").insert([
+        {
+          email: email,
+          name: name,
+          surname: surname,
+          personStatus: personStatus,
+          studentId: studentId,
+          password: password,
+        },
+      ]);
+      if (error) {
+        setStatus("เกิดข้อผิดพลาดที่ไม่ทราบสาเหตุ กรุณาลองใหม่อีกครั้ง");
+        setVariant("error");
+        resetState();
+      } else {
+        await plunk.events.publish({
+          email: email,
+          event: "register",
+          data: {
+            name: name,
+            linkToDelete: interpolateUrl(`/deleteTicket/${id}/${password}`),
+          },
+        });
+        setStatus("ลงทะเบียนสำเร็จ!");
+        setVariant("success");
+        resetState();
+      }
+    } else {
+      setStatus("มีผู้ใช้นี้อยู่ในระบบแล้ว กรุณาตรวจสอบข้อมูลอีกครั้ง");
+      setVariant("error");
+      resetState();
+    }
+  };
+
+  const handleSubmit = async (e) => {
+    console.log(password);
+    switch (personStatus) {
+      case "1":
+        //check all fields are filled
+        if (
+          name === "" ||
+          surname === "" ||
+          email === "" ||
+          personStatus === "" ||
+          studentId === "" ||
+          !validateEmail(email)
+        ) {
+          setStatus("กรุณากรอกข้อมูลให้ครบถ้วน");
+          setVariant("error");
+          break;
+        } else {
+          if (await validateCurrentStudent(studentId, name)) {
+            await createUsers();
+          } else {
+            setStatus("รหัสนักเรียนไม่ถูกต้อง กรุณาตรวจสอบอีกครั้ง");
+            setVariant("error");
+          }
+          break;
+        }
+      case "3":
+        //check all fields are filled
+        if (
+          name === "" ||
+          surname === "" ||
+          email === "" ||
+          personStatus === "" ||
+          studentId === "" ||
+          !validateEmail(email) ||
+          studentName === "" ||
+          studentClass === ""
+        ) {
+          setStatus("กรุณากรอกข้อมูลให้ครบถ้วน");
+          setVariant("error");
+          break;
+        } else {
+          if (
+            await validateStudentGuardian(studentId, studentName, studentClass)
+          ) {
+            await createUsers();
+          } else {
+            setStatus(
+              "ข้อมูลนักเรียนในปกครองไม่ถูกต้อง กรุณาตรวจสอบอีกครั้ง หรือติดต่อ TODO: เบอร์ผู้ประสานงาน"
+            );
+            setVariant("error");
+          }
+          break;
+        }
+      case "6":
+        //check all fields are filled
+        break;
     }
   };
 
@@ -176,12 +192,21 @@ export default function ChakraRegister() {
       <VStack mt={2}>
         <Heading>ลงทะเบียนเพื่อรับบัตรเข้างานได้ที่นี่!</Heading>
         <FormControl>
-          <FormLabel>ชื่อและนามสกุล (กรุณากรอกเป็นภาษาไทยเท่านั้น)</FormLabel>
+          <FormLabel>ชื่อ (กรุณากรอกเป็นภาษาไทยเท่านั้น)</FormLabel>
           <Input
             type="text"
             placeholder="Name"
             value={name}
             onChange={(e) => setName(e.target.value)}
+          />
+        </FormControl>
+        <FormControl>
+          <FormLabel>นามสกุล</FormLabel>
+          <Input
+            type="text"
+            placeholder="Surname"
+            value={surname}
+            onChange={(e) => setSurname(e.target.value)}
           />
         </FormControl>
         <FormControl isInvalid={!validateEmail(email)}>
@@ -196,6 +221,22 @@ export default function ChakraRegister() {
             <FormErrorMessage>อีเมลไม่ถูกต้อง</FormErrorMessage>
           )}
         </FormControl>
+        <FormControl>
+          <FormLabel>โปรดระบุสถานะของคุณ</FormLabel>
+          <Select
+            value={personStatus}
+            onChange={(e) => setPersonStatus(e.target.value)}
+          >
+            <option>Select your option</option>
+            <option value="1">นักเรียนโรงเรียนสาธิตจุฬาฯ ฝ่ายมัธยม</option>
+            {/*<option value="2">นักเรียนโรงเรียนสาธิตจุฬาฯ ฝ่ายประถม</option>*/}
+            <option value="3">ผู้ปกครอง</option>
+            <option value="4">บุคลากรโรงเรียนสาธิตจุฬาฯ</option>
+            <option value="6">ผู้ติดตามบุคคลากรโรงเรียนสาธิตจุฬาฯ</option>
+            <option value="5">ศิษย์เก่าโรงเรียนสาธิตจุฬาฯ</option>
+          </Select>
+        </FormControl>
+        {/*
         <FormControl isInvalid={!validateID(id)}>
           <FormLabel>
             เลขประจำตัวบัตรประชาชน (กรอกตัวเลข 13 หลักเท่านั้น)
@@ -210,34 +251,48 @@ export default function ChakraRegister() {
             <FormErrorMessage>เลขบัตรประชาชนไม่ถูกต้อง</FormErrorMessage>
           )}
         </FormControl>
-        <FormControl>
-          <FormLabel>โปรดระบุสถานะของคุณ</FormLabel>
-          <Select
-            value={personStatus}
-            onChange={(e) => setPersonStatus(e.target.value)}
-          >
-            <option>Select your option</option>
-            <option value="1">นักเรียนโรงเรียนสาธิตจุฬาฯ ฝ่ายมัธยม</option>
-            <option value="2">นักเรียนโรงเรียนสาธิตจุฬาฯ ฝ่ายประถม</option>
-            <option value="3">ผู้ปกครอง</option>
-            <option value="4">บุคลากรโรงเรียนสาธิตจุฬาฯ</option>
-            <option value="5">ศิษย์เก่าโรงเรียนสาธิตจุฬาฯ</option>
-          </Select>
-        </FormControl>
-        {personStatus === "3" && (
-          <FormControl isInvalid={!validateID(studentId)}>
-            <FormLabel>
-              โปรดระบุเลขประจำตัวบัตรประชาชนของนักเรียนในปกครอง
-            </FormLabel>
+        */}
+        {personStatus === "1" && (
+          <FormControl>
+            <FormLabel>โปรดระบุเลขประจำตัวนักเรียน</FormLabel>
             <Input
               type="text"
               placeholder="Student ID"
               value={studentId}
               onChange={(e) => setStudentId(e.target.value)}
             />
-            {validateID(studentId) ? null : (
-              <FormErrorMessage>เลขบัตรประชาชนไม่ถูกต้อง</FormErrorMessage>
-            )}
+          </FormControl>
+        )}
+
+        {personStatus === "3" && (
+          <FormControl mt={3}>
+            <FormLabel>โปรดระบุเลขประจำตัวของนักเรียนในปกครอง</FormLabel>
+            <Input
+              type="text"
+              placeholder="Student ID"
+              value={studentId}
+              onChange={(e) => setStudentId(e.target.value)}
+            />
+            <FormControl mt={2}>
+              <FormLabel>โปรดระบุชื่อของนักเรียนในปกครอง</FormLabel>
+              <Input
+                type="text"
+                placeholder="Student Name"
+                value={studentName}
+                onChange={(e) => setStudentName(e.target.value)}
+              />
+            </FormControl>
+            <FormControl mt={2}>
+              <FormLabel>
+                โปรดระบุระดับชั้นของนักเรียนในปกครอง (เช่น 3/1)
+              </FormLabel>
+              <Input
+                type="text"
+                placeholder="Student Class"
+                value={studentClass}
+                onChange={(e) => setStudentClass(e.target.value)}
+              />
+            </FormControl>
           </FormControl>
         )}
         <Container p={0}>

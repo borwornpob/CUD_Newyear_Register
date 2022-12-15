@@ -17,9 +17,9 @@ export default function Ticket() {
     e.preventDefault();
     setStatus("loading");
     const { data, error } = await supabase
-      .from("Users")
+      .from("registered")
       .select("*")
-      .eq("id", id);
+      .eq("email", id);
     if (error) {
       setStatus("Error");
       resetState();
@@ -45,6 +45,7 @@ export default function Ticket() {
     "ผู้ปกครอง",
     "บุคลากรโรงเรียนสาธิตจุฬาฯ",
     "ศิษย์เก่าโรงเรียนสาธิตจุฬาฯ",
+    "ผู้ติดตามบุคลากรโรงเรียนสาธิตจุฬาฯ",
   ];
 
   return (
@@ -52,10 +53,10 @@ export default function Ticket() {
       <h2 className="mt-2">Find my ticket</h2>
       <Form onSubmit={handleSubmit}>
         <Form.Group controlId="formBasicID">
-          <Form.Label>กรอกเลขบัตรประชาชนที่ลงทะเบียนแล้ว</Form.Label>
+          <Form.Label>กรอกอีเมลที่ลงทะเบียนแล้ว</Form.Label>
           <Form.Control
             type="text"
-            placeholder="Enter ID"
+            placeholder="Enter your email here"
             value={id}
             onChange={(e) => setId(e.target.value)}
           />

@@ -53,9 +53,9 @@ export default function DeleteTicket() {
     setStatus("loading");
     if (id) {
       const { data, error } = await supabase
-        .from("Users")
+        .from("registered")
         .select("*")
-        .eq("id", id);
+        .eq("email", id);
       if (error) {
         setStatus("Error");
         resetState();
@@ -85,9 +85,9 @@ export default function DeleteTicket() {
     setPersonStatus("loading");
     if (id) {
       const { data, error } = await supabase
-        .from("Users")
+        .from("registered")
         .delete()
-        .eq("id", id);
+        .eq("email", id);
       if (error) {
         setStatus("Error");
         resetState();

@@ -45,9 +45,9 @@ export default function Ticket() {
     setStatus("loading");
     if (id) {
       const { data, error } = await supabase
-        .from("Users")
+        .from("registered")
         .select("*")
-        .eq("id", id);
+        .eq("email", id);
       if (error) {
         setStatus("Error");
         resetState();
@@ -77,6 +77,7 @@ export default function Ticket() {
     "ผู้ปกครอง",
     "บุคลากรโรงเรียนสาธิตจุฬาฯ",
     "ศิษย์เก่าโรงเรียนสาธิตจุฬาฯ",
+    "ผู้ติดตามบุคคลากรโรงเรียนสาธิตจุฬาฯ",
   ];
 
   const interpolateUrl = (path) => {
@@ -88,7 +89,7 @@ export default function Ticket() {
       <VStack>
         <Heading>ค้นหาบัตรเข้างานได้ที่นี่!</Heading>
         <FormControl id="id" isRequired>
-          <FormLabel>กรุณากรอกเลขบัตรประชาชนที่ลงทะเบียนไว้แล้ว</FormLabel>
+          <FormLabel>กรุณากรอกอีเมลที่ลงทะเบียนไว้แล้ว</FormLabel>
           <Input
             type="text"
             placeholder="ID"
@@ -122,10 +123,14 @@ export default function Ticket() {
             <Card maxW="md" boxShadow="md">
               <CardBody>
                 <VStack p={0}>
-                  <QRCode value={interpolateUrl(`/checkAtFront/${id}`)} />
-                  <Heading size="md">{data[0].name}</Heading>
+                  <QRCode
+                    value={interpolateUrl(`/checkAtFront/${data[0].email}/`)}
+                  />
+                  <Heading size="md">
+                    {data[0].name + " " + data[0].surname}
+                  </Heading>
                   <Text>{data[0].email}</Text>
-                  <Text>{statusText[data[0].status]}</Text>
+                  <Text>{statusText[data[0].personStatus]}</Text>
                 </VStack>
               </CardBody>
             </Card>
