@@ -10,8 +10,8 @@ const generateImage = () => {
   ctx.fillRect(0, 0, canvas.width, canvas.height);
 
   // Set the fill style for the text to be drawn
-  ctx.fillStyle = "#000000";
-  ctx.font = "48px sans-serif";
+  ctx.fillStyle = "#ffffff";
+  ctx.font = "100px sans-serif";
 
   // Draw the text 'Hello, World!' on the canvas
   ctx.fillText("Hello, World!", 50, 100);

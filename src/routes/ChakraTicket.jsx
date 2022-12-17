@@ -27,17 +27,18 @@ import {
   Card,
   CardBody,
   Text,
+  Image,
 } from "@chakra-ui/react";
 
 import { supabase } from "../helper/supabaseClient";
 import QRCode from "react-qr-code";
 import useWindowDimensions from "../hooks/dimensions";
-import TicketCreator from "../helper/ticketCreator";
 
 export default function Ticket() {
   const [id, setId] = useState("");
   const [status, setStatus] = useState("");
   const [data, setData] = useState([]);
+  const [url, setUrl] = useState("");
 
   const { width } = useWindowDimensions();
 
@@ -60,6 +61,7 @@ export default function Ticket() {
       if (data.length > 0) {
         setStatus("User found");
         setData(data);
+        setUrl(interpolateUrl(`/checkAtFront/${data[0].email}/`));
       }
     } else if (id == "") {
       setStatus("Please enter id");
@@ -121,12 +123,10 @@ export default function Ticket() {
         )}
         {status === "User found" && (
           <VStack>
-            <Card maxW="md" boxShadow="md">
+            {/*<Card maxW="md" boxShadow="md">
               <CardBody>
                 <VStack p={0}>
-                  <QRCode
-                    value={interpolateUrl(`/checkAtFront/${data[0].email}/`)}
-                  />
+                  <QRCode value={url} />
                   <Heading size="md">
                     {data[0].name + " " + data[0].surname}
                   </Heading>
@@ -134,11 +134,19 @@ export default function Ticket() {
                   <Text>{statusText[data[0].personStatus]}</Text>
                 </VStack>
               </CardBody>
-            </Card>
+            </Card>*/}
+            <Box size="sm">
+              <Image
+                src={`http://localhost:3000/image?text=${data[0].name} ${
+                  data[0].surname
+                }&email=${data[0].email}&status=${
+                  statusText[data[0].personStatus]
+                }&logLink=${url}`}
+              />
+            </Box>
             <Text>
               โปรดนำบัตรเข้างานและแสดงบัตรประชาชนเพื่อยืนยันตัวตนต่อเจ้าหน้าที่
             </Text>
-            <TicketCreator />
           </VStack>
         )}
         {status === "Please enter id" && (
