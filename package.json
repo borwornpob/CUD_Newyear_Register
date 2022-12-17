@@ -20,6 +20,7 @@
     "@supabase/supabase-js": "^2.1.0",
     "@vercel/og": "^0.0.20",
     "bootstrap": "^5.2.2",
+    "cloudinary-react": "^1.8.1",
     "framer-motion": "^7.6.7",
     "localforage": "^1.10.0",
     "match-sorter": "^6.3.1",

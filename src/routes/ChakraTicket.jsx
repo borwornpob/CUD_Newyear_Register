@@ -32,6 +32,7 @@ import {
 import { supabase } from "../helper/supabaseClient";
 import QRCode from "react-qr-code";
 import useWindowDimensions from "../hooks/dimensions";
+import TicketCreator from "../helper/ticketCreator";
 
 export default function Ticket() {
   const [id, setId] = useState("");
@@ -92,7 +93,7 @@ export default function Ticket() {
           <FormLabel>กรุณากรอกอีเมลที่ลงทะเบียนไว้แล้ว</FormLabel>
           <Input
             type="text"
-            placeholder="ID"
+            placeholder="Email"
             value={id}
             onChange={(e) => setId(e.target.value)}
           />
@@ -137,6 +138,7 @@ export default function Ticket() {
             <Text>
               โปรดนำบัตรเข้างานและแสดงบัตรประชาชนเพื่อยืนยันตัวตนต่อเจ้าหน้าที่
             </Text>
+            <TicketCreator />
           </VStack>
         )}
         {status === "Please enter id" && (
