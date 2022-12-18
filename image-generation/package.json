@@ -6,7 +6,7 @@
   "scripts": {
     "test": "echo \"Error: no test specified\" && exit 1",
     "start": "export NODE_OPTIONS=--openssl-legacy-provider; ./node_modules/.bin/netlify-lambda serve src --config webpack.config.js",
-    "build": "unset NODE_OPTIONS; export NODE_OPTIONS=--openssl-legacy-provider; ./node_modules/.bin/netlify-lambda build src --config webpack.config.js"
+    "build": "unset NODE_OPTIONS&&export NODE_OPTIONS=--openssl-legacy-provider&&./node_modules/.bin/netlify-lambda build src --config webpack.config.js"
   },
   "author": "Borwornpob Thumrongchotikhun",
   "license": "ISC",
