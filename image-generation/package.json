@@ -5,8 +5,8 @@
   "main": "index.js",
   "scripts": {
     "test": "echo \"Error: no test specified\" && exit 1",
-    "start": "export NODE_OPTIONS=--openssl-legacy-provider; ./node_modules/.bin/netlify-lambda serve src",
-    "build": "export NODE_OPTIONS=--openssl-legacy-provider; ./node_modules/.bin/netlify-lambda build src"
+    "start": "export NODE_OPTIONS=--openssl-legacy-provider; ./node_modules/.bin/netlify-lambda serve src --config webpack.config.js",
+    "build": "export NODE_OPTIONS=--openssl-legacy-provider; ./node_modules/.bin/netlify-lambda build src --config webpack.config.js"
   },
   "author": "Borwornpob Thumrongchotikhun",
   "license": "ISC",
