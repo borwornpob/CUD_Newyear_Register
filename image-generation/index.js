@@ -15,7 +15,7 @@ const generateImage = async (text, email, status, logLink) => {
   const qrCode = await qrcode.toDataURL(logLink);
 
   // Read the local image into a buffer
-  const imageData = await fs.promises.readFile("./assets/cutopia.png");
+  const imageData = await fs.promises.readFile("./assets/cutopia_final.png");
 
   // Create a new image from the buffer and get its dimensions
   const image = new Canvas.Image();
@@ -48,12 +48,13 @@ const generateImage = async (text, email, status, logLink) => {
   // Measure the width of the text to determine where to position it
   const textWidth = ctx.measureText(text).width;
   const emailWidth = ctx.measureText(email).width;
-  const statusWidth = ctx.measureText(status).width;
 
   // Draw the text on the canvas, centered horizontally
   ctx.fillText(text, (width - textWidth) / 2, 785);
-  ctx.fillText(email, (width - emailWidth) / 2, 875);
-  ctx.fillText(status, (width - statusWidth) / 2, 970);
+  ctx.fillText(email, (width - emailWidth) / 2, 870);
+  ctx.font = "36px 'Chakra Petch', sans-serif";
+  const statusWidth = ctx.measureText(status).width;
+  ctx.fillText(status, (width - statusWidth) / 2, 955);
 
   // Export the canvas to a PNG image
   return canvas.toBuffer();
@@ -81,6 +82,6 @@ app.get("/image", async (req, res) => {
   }
 });
 
-app.listen(3000, () => {
-  console.log("Image generation API listening on port 3000");
+app.listen(process.env.PORT, () => {
+  console.log(`Image generation API listening on port ${process.env.PORT}`);
 });

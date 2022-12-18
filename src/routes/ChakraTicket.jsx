@@ -118,7 +118,7 @@ export default function Ticket() {
         {status === "No user found" && (
           <Alert status="error" variant="solid">
             <AlertIcon />
-            ไม่พบเลขบัตรประชาชนนี้ในระบบ กรุณาตรวจสอบอีกครั้ง
+            ไม่พบอีเมลนี้ในระบบ กรุณาตรวจสอบอีกครั้ง
           </Alert>
         )}
         {status === "User found" && (
@@ -152,7 +152,7 @@ export default function Ticket() {
         {status === "Please enter id" && (
           <Alert status="error" variant="solid">
             <AlertIcon />
-            กรุณากรอกเลขบัตรประชาชน
+            กรุณากรอกอีเมลที่ลงทะเบียนไว้แล้ว
           </Alert>
         )}
       </VStack>

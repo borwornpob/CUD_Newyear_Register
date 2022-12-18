@@ -58,6 +58,7 @@ export default function ChakraRegister() {
   const [password, setPassword] = useState(generatePassword());
   const [studentName, setStudentName] = useState("");
   const [studentClass, setStudentClass] = useState("");
+  const [graduationYear, setGraduationYear] = useState("");
 
   const { width } = useWindowDimensions();
 
@@ -181,8 +182,35 @@ export default function ChakraRegister() {
           }
           break;
         }
-      case "6":
+      case "5":
         //check all fields are filled
+        if (
+          name === "" ||
+          surname === "" ||
+          email === "" ||
+          personStatus === "" ||
+          studentId === "" ||
+          !validateEmail(email) ||
+          graduationYear === ""
+        ) {
+          setStatus("กรุณากรอกข้อมูลให้ครบถ้วน");
+          setVariant("error");
+          break;
+        } else {
+          if (await validateAlumniStudent(studentId, name, graduationYear)) {
+            await createUsers();
+          } else {
+            setStatus(
+              "ข้อมูลศิษย์เก่าไม่ถูกต้อง กรุณาตรวจสอบอีกครั้ง หรือติดต่อ TODO: เบอร์ผู้ประสานงาน"
+            );
+            setVariant("error");
+          }
+
+          break;
+        }
+      default:
+        setStatus("กรุณาเลือกสถานะของคุณ");
+        setVariant("error");
         break;
     }
   };
@@ -295,6 +323,26 @@ export default function ChakraRegister() {
             </FormControl>
           </FormControl>
         )}
+        {personStatus === "5" && (
+          <FormControl mt={3}>
+            <FormLabel>โปรดระบุเลขประจำตัวนักเรียน</FormLabel>
+            <Input
+              type="text"
+              placeholder="Student ID"
+              value={studentId}
+              onChange={(e) => setStudentId(e.target.value)}
+            />
+            <FormControl mt={3}>
+              <FormLabel>โปรดระบุปีที่ท่านจบการศึกษา</FormLabel>
+              <Input
+                type="text"
+                placeholder="Graduation Year"
+                value={graduationYear}
+                onChange={(e) => setGraduationYear(e.target.value)}
+              />
+            </FormControl>
+          </FormControl>
+        )}
         <Container p={0}>
           <Button
             colorScheme="teal"
@@ -304,7 +352,7 @@ export default function ChakraRegister() {
             width="100%"
             mt={2}
           >
-            Register
+            ลงทะเบียน
           </Button>
         </Container>
         {status && (

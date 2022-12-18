@@ -59,11 +59,11 @@ export async function validateAlumniStudent(
 ) {
   if (studentId === "") return true;
   const { data, error } = await supabase
-    .from("alumniStudents")
+    .from("alumni")
     .select("*")
     .eq("studentID", studentId)
     .eq("Firstname", studentName)
-    .eq("year", graduatedYear);
+    .eq("graduatedYear", graduatedYear);
   if (error) {
     console.log(error);
     return false;
