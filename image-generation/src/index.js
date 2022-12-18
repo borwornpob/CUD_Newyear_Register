@@ -2,6 +2,7 @@ const express = require("express");
 const Canvas = require("canvas");
 const fs = require("fs");
 const qrcode = require("qrcode");
+const serverless = require("serverless-http");
 
 const app = express();
 
@@ -27,6 +28,7 @@ const generateImage = async (text, email, status, logLink) => {
   // Create a new canvas with the same dimensions as the local image
   const canvas = Canvas.createCanvas(width, height);
   const ctx = canvas.getContext("2d");
+  console.log("Hello");
 
   // Draw the local image on the canvas
   ctx.drawImage(image, 0, 0, width, height);
@@ -59,10 +61,11 @@ const generateImage = async (text, email, status, logLink) => {
   ctx.fillText(status, (width - statusWidth) / 2, 955);
 
   // Export the canvas to a PNG image
+  console.log(canvas.toBuffer());
   return canvas.toBuffer();
 };
 
-router.get("/", async (req, res) => {
+router.get("/image", async (req, res) => {
   // Get the text to be drawn from the query string
   const text = req.query.text || "John Doe";
   const email = req.query.email || "placeholder@email.com";
@@ -72,18 +75,16 @@ router.get("/", async (req, res) => {
   try {
     // Generate the image
     const image = await generateImage(text, email, status, logLink);
-
+    console.log(image);
     // Set the content type of the response to 'image/png'
-    res.set("Content-Type", "image/png");
 
-    // Send the image back to the client
-    res.send(image);
+    res.json({ image: image.toString("base64") });
   } catch (err) {
     // If there is an error generating the image, send an error response
     res.status(500).send({ error: err.message });
   }
 });
 
-app.use("/.netlify/functions/image", router);
+app.use("/.netlify/functions/index", router);
 
 module.exports.handler = serverless(app);
