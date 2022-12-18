@@ -5,6 +5,8 @@ const qrcode = require("qrcode");
 
 const app = express();
 
+const router = express.Router();
+
 // Load the custom font from Google Fonts
 Canvas.registerFont("./assets/Chakra_Petch/ChakraPetch-Medium.ttf", {
   family: "Chakra Petch",
@@ -60,7 +62,7 @@ const generateImage = async (text, email, status, logLink) => {
   return canvas.toBuffer();
 };
 
-app.get("/image", async (req, res) => {
+router.get("/", async (req, res) => {
   // Get the text to be drawn from the query string
   const text = req.query.text || "John Doe";
   const email = req.query.email || "placeholder@email.com";
@@ -82,6 +84,6 @@ app.get("/image", async (req, res) => {
   }
 });
 
-app.listen(process.env.PORT, () => {
-  console.log(`Image generation API listening on port ${process.env.PORT}`);
-});
+app.use("/.netlify/functions/image", router);
+
+module.exports.handler = serverless(app);
