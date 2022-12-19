@@ -256,11 +256,11 @@ export default function ChakraRegister() {
             onChange={(e) => setPersonStatus(e.target.value)}
           >
             <option>Select your option</option>
-            <option value="1">นักเรียนโรงเรียนสาธิตจุฬาฯ ฝ่ายมัธยม</option>
+            {/*<option value="1">นักเรียนโรงเรียนสาธิตจุฬาฯ ฝ่ายมัธยม</option>*/}
             {/*<option value="2">นักเรียนโรงเรียนสาธิตจุฬาฯ ฝ่ายประถม</option>*/}
             <option value="3">ผู้ปกครอง</option>
-            <option value="4">บุคลากรโรงเรียนสาธิตจุฬาฯ</option>
-            <option value="6">ผู้ติดตามบุคคลากรโรงเรียนสาธิตจุฬาฯ</option>
+            {/*<option value="4">บุคลากรโรงเรียนสาธิตจุฬาฯ</option>*/}
+            {/*<option value="6">ผู้ติดตามบุคคลากรโรงเรียนสาธิตจุฬาฯ</option>*/}
             <option value="5">ศิษย์เก่าโรงเรียนสาธิตจุฬาฯ</option>
           </Select>
         </FormControl>
@@ -312,7 +312,8 @@ export default function ChakraRegister() {
             </FormControl>
             <FormControl mt={2}>
               <FormLabel>
-                โปรดระบุระดับชั้นของนักเรียนในปกครอง (เช่น 3/1)
+                โปรดระบุระดับชั้นของนักเรียนในปกครอง (เช่น ม.3/1 จำเป็นต้องมี ม.
+                นำหน้า)
               </FormLabel>
               <Input
                 type="text"
@@ -333,7 +334,9 @@ export default function ChakraRegister() {
               onChange={(e) => setStudentId(e.target.value)}
             />
             <FormControl mt={3}>
-              <FormLabel>โปรดระบุปีที่ท่านจบการศึกษา</FormLabel>
+              <FormLabel>
+                โปรดระบุปีที่ท่านจบการศึกษา (เช่น 2563, 2564)
+              </FormLabel>
               <Input
                 type="text"
                 placeholder="Graduation Year"

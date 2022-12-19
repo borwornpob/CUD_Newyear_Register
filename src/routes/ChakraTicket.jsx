@@ -134,7 +134,7 @@ export default function Ticket() {
         )}
         {status === "User found" && (
           <VStack>
-            {/*<Card maxW="md" boxShadow="md">
+            <Card maxW="md" boxShadow="md">
               <CardBody>
                 <VStack p={0}>
                   <QRCode value={url} />
@@ -145,8 +145,8 @@ export default function Ticket() {
                   <Text>{statusText[data[0].personStatus]}</Text>
                 </VStack>
               </CardBody>
-            </Card>*/}
-            <Box size="sm">
+            </Card>
+            {/*<Box size="sm">
               <Image
                 src={() => {
                   fetch(
@@ -163,7 +163,7 @@ export default function Ticket() {
                     });
                 }}
               />
-            </Box>
+              </Box>*/}
             <Text>
               โปรดนำบัตรเข้างานและแสดงบัตรประชาชนเพื่อยืนยันตัวตนต่อเจ้าหน้าที่
             </Text>
