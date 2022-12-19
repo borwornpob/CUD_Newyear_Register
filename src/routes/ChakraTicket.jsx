@@ -62,6 +62,17 @@ export default function Ticket() {
         setStatus("User found");
         setData(data);
         setUrl(interpolateUrl(`/checkAtFront/${data[0].email}/`));
+        await fetch(
+          `https://tubular-zabaione-3b2375.netlify.app/.netlify/functions/index/image?text=${
+            data[0].name
+          } ${data[0].surname}&email=${data[0].email}&status=${
+            statusText[data[0].personStatus]
+          }&logLink=${url}`
+        )
+          .then((res) => res.json())
+          .then((data) => {
+            console.log(data);
+          });
       }
     } else if (id == "") {
       setStatus("Please enter id");
@@ -137,11 +148,20 @@ export default function Ticket() {
             </Card>*/}
             <Box size="sm">
               <Image
-                src={`https://tubular-zabaione-3b2375.netlify.app/.netlify/functions/index/image?text=${
-                  data[0].name
-                } ${data[0].surname}&email=${data[0].email}&status=${
-                  statusText[data[0].personStatus]
-                }&logLink=${url}`}
+                src={() => {
+                  fetch(
+                    `https://tubular-zabaione-3b2375.netlify.app/.netlify/functions/index/image?text=${
+                      data[0].name
+                    } ${data[0].surname}&email=${data[0].email}&status=${
+                      statusText[data[0].personStatus]
+                    }&logLink=${url}`
+                  )
+                    .then((res) => res.json())
+                    .then((data) => {
+                      console.log(data[0]);
+                      return data[0];
+                    });
+                }}
               />
             </Box>
             <Text>
