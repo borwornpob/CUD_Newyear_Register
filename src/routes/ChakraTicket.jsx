@@ -137,9 +137,9 @@ export default function Ticket() {
             </Card>*/}
             <Box size="sm">
               <Image
-                src={`http://localhost:3000/image?text=${data[0].name} ${
-                  data[0].surname
-                }&email=${data[0].email}&status=${
+                src={`https://tubular-zabaione-3b2375.netlify.app/.netlify/functions/index/image?text=${
+                  data[0].name
+                } ${data[0].surname}&email=${data[0].email}&status=${
                   statusText[data[0].personStatus]
                 }&logLink=${url}`}
               />

@@ -78,7 +78,8 @@ router.get("/image", async (req, res) => {
     console.log(image);
     // Set the content type of the response to 'image/png'
 
-    res.json({ image: image.toString("base64") });
+    res.set("Content-Type", "image/png");
+    res.send(image);
   } catch (err) {
     // If there is an error generating the image, send an error response
     res.status(500).send({ error: err.message });
