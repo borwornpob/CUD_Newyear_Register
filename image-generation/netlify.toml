@@ -1,5 +1,5 @@
 [build]
   functions = "functions"
 
-[build.enviroments]
-    
+[functions]
+  included_files = ["./assets/**"]
