@@ -120,6 +120,18 @@ export default function ChakraRegister() {
           password: password,
         },
       ]);
+      if (personStatus === "3") {
+        //create user in another talbe
+        const { error2 } = await supabase.from("guardians").insert([
+          {
+            email: email,
+            name: name,
+            surname: surname,
+            studentID: studentId,
+          },
+        ]);
+      }
+
       if (error) {
         setStatus("เกิดข้อผิดพลาดที่ไม่ทราบสาเหตุ กรุณาลองใหม่อีกครั้ง");
         setVariant("error");
@@ -146,6 +158,8 @@ export default function ChakraRegister() {
 
   const handleSubmit = async (e) => {
     console.log(password);
+    setStatus("loading...");
+    setVariant("info");
     if (acceptTerms) {
       switch (personStatus) {
         case "1":
@@ -196,7 +210,7 @@ export default function ChakraRegister() {
               await createUsers();
             } else {
               setStatus(
-                "ข้อมูลนักเรียนในปกครองไม่ถูกต้อง กรุณาตรวจสอบอีกครั้ง หรือติดต่อ TODO: เบอร์ผู้ประสานงาน"
+                "ข้อมูลนักเรียนในปกครองไม่ถูกต้องหรือโควตาลงทะเบียนของนักเรียนถูกใช้หมดแล้ว กรุณาตรวจสอบอีกครั้ง หรือติดต่อ TODO: เบอร์ผู้ประสานงาน"
               );
               setVariant("error");
             }
@@ -326,7 +340,9 @@ export default function ChakraRegister() {
               onChange={(e) => setStudentId(e.target.value)}
             />
             <FormControl mt={2}>
-              <FormLabel>โปรดระบุชื่อของนักเรียนในปกครอง</FormLabel>
+              <FormLabel>
+                โปรดระบุชื่อของนักเรียนในปกครอง (กรอกเพียงแค่ชื่อ เช่น บวรภพ)
+              </FormLabel>
               <Input
                 type="text"
                 placeholder="Student Name"
