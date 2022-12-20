@@ -375,7 +375,7 @@ export default function ChakraRegister() {
             />
             <FormControl mt={3}>
               <FormLabel>
-                โปรดระบุปีที่ท่านจบการศึกษา (เช่น 2563, 2564)
+                โปรดระบุปีที่ท่านจบการศึกษา (เช่น 2563 หรือ 2564)
               </FormLabel>
               <Input
                 type="text"
@@ -392,7 +392,7 @@ export default function ChakraRegister() {
             onOpen();
           }}
         >
-          ฉันยอมรัมเงื่อนไขการเข้างานคอนเสิร์ตปีใหม่
+          ข้าพเจ้ารับทราบและจะปฏิบัติตามแนวปฏิบัติการเข้าร่วมกิจกรรมคอนเสิร์ต
         </Checkbox>
         <Container p={0}>
           <Button
