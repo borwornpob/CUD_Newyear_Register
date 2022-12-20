@@ -25,9 +25,22 @@ import {
   Alert,
   AlertIcon,
   DarkMode,
+  Modal,
+  ModalOverlay,
+  ModalContent,
+  ModalHeader,
+  ModalFooter,
+  ModalBody,
+  ModalCloseButton,
+  useDisclosure,
+  Text,
+  Image,
 } from "@chakra-ui/react";
 import useWindowDimensions from "../hooks/dimensions";
 import { plunk } from "../helper/plunk";
+
+import Instruction1 from "../assets/instructions1.jpg";
+import Instruction2 from "../assets/instructions2.jpg";
 
 import {
   validateAlumniStudent,
@@ -59,6 +72,8 @@ export default function ChakraRegister() {
   const [studentName, setStudentName] = useState("");
   const [studentClass, setStudentClass] = useState("");
   const [graduationYear, setGraduationYear] = useState("");
+  const [acceptTerms, setAcceptTerms] = useState(false);
+  const { isOpen, onOpen, onClose } = useDisclosure();
 
   const { width } = useWindowDimensions();
 
@@ -131,87 +146,96 @@ export default function ChakraRegister() {
 
   const handleSubmit = async (e) => {
     console.log(password);
-    switch (personStatus) {
-      case "1":
-        //check all fields are filled
-        if (
-          name === "" ||
-          surname === "" ||
-          email === "" ||
-          personStatus === "" ||
-          studentId === "" ||
-          !validateEmail(email)
-        ) {
-          setStatus("กรุณากรอกข้อมูลให้ครบถ้วน");
-          setVariant("error");
-          break;
-        } else {
-          if (await validateCurrentStudent(studentId, name)) {
-            await createUsers();
-          } else {
-            setStatus("รหัสนักเรียนไม่ถูกต้อง กรุณาตรวจสอบอีกครั้ง");
-            setVariant("error");
-          }
-          break;
-        }
-      case "3":
-        //check all fields are filled
-        if (
-          name === "" ||
-          surname === "" ||
-          email === "" ||
-          personStatus === "" ||
-          studentId === "" ||
-          !validateEmail(email) ||
-          studentName === "" ||
-          studentClass === ""
-        ) {
-          setStatus("กรุณากรอกข้อมูลให้ครบถ้วน");
-          setVariant("error");
-          break;
-        } else {
+    if (acceptTerms) {
+      switch (personStatus) {
+        case "1":
+          //check all fields are filled
           if (
-            await validateStudentGuardian(studentId, studentName, studentClass)
+            name === "" ||
+            surname === "" ||
+            email === "" ||
+            personStatus === "" ||
+            studentId === "" ||
+            !validateEmail(email)
           ) {
-            await createUsers();
-          } else {
-            setStatus(
-              "ข้อมูลนักเรียนในปกครองไม่ถูกต้อง กรุณาตรวจสอบอีกครั้ง หรือติดต่อ TODO: เบอร์ผู้ประสานงาน"
-            );
+            setStatus("กรุณากรอกข้อมูลให้ครบถ้วน");
             setVariant("error");
+            break;
+          } else {
+            if (await validateCurrentStudent(studentId, name)) {
+              await createUsers();
+            } else {
+              setStatus("รหัสนักเรียนไม่ถูกต้อง กรุณาตรวจสอบอีกครั้ง");
+              setVariant("error");
+            }
+            break;
           }
-          break;
-        }
-      case "5":
-        //check all fields are filled
-        if (
-          name === "" ||
-          surname === "" ||
-          email === "" ||
-          personStatus === "" ||
-          studentId === "" ||
-          !validateEmail(email) ||
-          graduationYear === ""
-        ) {
-          setStatus("กรุณากรอกข้อมูลให้ครบถ้วน");
+        case "3":
+          //check all fields are filled
+          if (
+            name === "" ||
+            surname === "" ||
+            email === "" ||
+            personStatus === "" ||
+            studentId === "" ||
+            !validateEmail(email) ||
+            studentName === "" ||
+            studentClass === ""
+          ) {
+            setStatus("กรุณากรอกข้อมูลให้ครบถ้วน");
+            setVariant("error");
+            break;
+          } else {
+            if (
+              await validateStudentGuardian(
+                studentId,
+                studentName,
+                studentClass
+              )
+            ) {
+              await createUsers();
+            } else {
+              setStatus(
+                "ข้อมูลนักเรียนในปกครองไม่ถูกต้อง กรุณาตรวจสอบอีกครั้ง หรือติดต่อ TODO: เบอร์ผู้ประสานงาน"
+              );
+              setVariant("error");
+            }
+            break;
+          }
+        case "5":
+          //check all fields are filled
+          if (
+            name === "" ||
+            surname === "" ||
+            email === "" ||
+            personStatus === "" ||
+            studentId === "" ||
+            !validateEmail(email) ||
+            graduationYear === ""
+          ) {
+            setStatus("กรุณากรอกข้อมูลให้ครบถ้วน");
+            setVariant("error");
+            break;
+          } else {
+            if (await validateAlumniStudent(studentId, name, graduationYear)) {
+              await createUsers();
+            } else {
+              setStatus(
+                "ข้อมูลศิษย์เก่าไม่ถูกต้อง กรุณาตรวจสอบอีกครั้ง หรือติดต่อ TODO: เบอร์ผู้ประสานงาน"
+              );
+              setVariant("error");
+            }
+
+            break;
+          }
+        default:
+          setStatus("กรุณาเลือกสถานะของคุณ");
           setVariant("error");
           break;
-        } else {
-          if (await validateAlumniStudent(studentId, name, graduationYear)) {
-            await createUsers();
-          } else {
-            setStatus(
-              "ข้อมูลศิษย์เก่าไม่ถูกต้อง กรุณาตรวจสอบอีกครั้ง หรือติดต่อ TODO: เบอร์ผู้ประสานงาน"
-            );
-            setVariant("error");
-          }
-
-          break;
-        }
-      default:
-        setStatus("กรุณาเลือกสถานะของคุณ");
-        setVariant("error");
-        break;
+      }
+    } else {
+      setStatus("กรุณายอมรับข้อตกลง");
+      setVariant("error");
     }
   };
 
@@ -258,7 +282,7 @@ export default function ChakraRegister() {
             <option>Select your option</option>
             {/*<option value="1">นักเรียนโรงเรียนสาธิตจุฬาฯ ฝ่ายมัธยม</option>*/}
             {/*<option value="2">นักเรียนโรงเรียนสาธิตจุฬาฯ ฝ่ายประถม</option>*/}
-            <option value="3">ผู้ปกครอง</option>
+            <option value="3">ผู้ปกครอง นร.สาธิตจุฬาฯ มัธยม</option>
             {/*<option value="4">บุคลากรโรงเรียนสาธิตจุฬาฯ</option>*/}
             {/*<option value="6">ผู้ติดตามบุคคลากรโรงเรียนสาธิตจุฬาฯ</option>*/}
             <option value="5">ศิษย์เก่าโรงเรียนสาธิตจุฬาฯ</option>
@@ -346,6 +370,14 @@ export default function ChakraRegister() {
             </FormControl>
           </FormControl>
         )}
+        <Checkbox
+          onChange={() => {
+            setAcceptTerms(!acceptTerms);
+            onOpen();
+          }}
+        >
+          ฉันยอมรัมเงื่อนไขการเข้างานคอนเสิร์ตปีใหม่
+        </Checkbox>
         <Container p={0}>
           <Button
             colorScheme="teal"
@@ -364,6 +396,22 @@ export default function ChakraRegister() {
             {status}
           </Alert>
         )}
+        <Modal isOpen={isOpen} onClose={onClose}>
+          <ModalOverlay />
+          <ModalContent>
+            <ModalHeader>เงื่อนไขการเข้างานคอนเสิร์ตปีใหม่</ModalHeader>
+            <ModalCloseButton />
+            <ModalBody>
+              <Image src={Instruction1}></Image>
+              <Image src={Instruction2}></Image>
+            </ModalBody>
+            <ModalFooter>
+              <Button colorScheme="teal" onClick={onClose}>
+                ยอมรับ
+              </Button>
+            </ModalFooter>
+          </ModalContent>
+        </Modal>
       </VStack>
     </Container>
   );
