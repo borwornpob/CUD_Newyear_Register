@@ -210,7 +210,7 @@ export default function ChakraRegister() {
               await createUsers();
             } else {
               setStatus(
-                "ข้อมูลนักเรียนในปกครองไม่ถูกต้องหรือโควตาลงทะเบียนของนักเรียนถูกใช้หมดแล้ว กรุณาตรวจสอบอีกครั้ง หรือติดต่อ TODO: เบอร์ผู้ประสานงาน"
+                "ข้อมูลนักเรียนในปกครองไม่ถูกต้องหรือโควตาลงทะเบียนของนักเรียนถูกใช้หมดแล้ว กรุณาตรวจสอบอีกครั้ง หรือติดต่อผ่าน Line Official"
               );
               setVariant("error");
             }
@@ -235,11 +235,27 @@ export default function ChakraRegister() {
               await createUsers();
             } else {
               setStatus(
-                "ข้อมูลศิษย์เก่าไม่ถูกต้อง กรุณาตรวจสอบอีกครั้ง หรือติดต่อ TODO: เบอร์ผู้ประสานงาน"
+                "ข้อมูลศิษย์เก่าไม่ถูกต้อง กรุณาตรวจสอบอีกครั้ง หรือติดต่อผ่าน Line Official"
               );
               setVariant("error");
             }
 
+            break;
+          }
+        case "7":
+          //check all fields are filled
+          if (
+            name === "" ||
+            surname === "" ||
+            email === "" ||
+            personStatus === "" ||
+            !validateEmail(email)
+          ) {
+            setStatus("กรุณากรอกข้อมูลให้ครบถ้วน");
+            setVariant("error");
+            break;
+          } else {
+            await createUsers();
             break;
           }
         default:
@@ -300,6 +316,9 @@ export default function ChakraRegister() {
             {/*<option value="4">บุคลากรโรงเรียนสาธิตจุฬาฯ</option>*/}
             {/*<option value="6">ผู้ติดตามบุคคลากรโรงเรียนสาธิตจุฬาฯ</option>*/}
             <option value="5">ศิษย์เก่าโรงเรียนสาธิตจุฬาฯ</option>
+            <option value="7">
+              ศิษย์เก่าโรงเรียนสาธิตจุฬาฯ ฝ่ายมัธยมที่จบการศึกษาก่อนปี 2562
+            </option>
           </Select>
         </FormControl>
         {/*
@@ -405,6 +424,24 @@ export default function ChakraRegister() {
           >
             ลงทะเบียน
           </Button>
+        </Container>
+        <Container p={0}>
+          <Text>
+            หากพบปัญหาในการลงทะเบียนสามารถติดต่อได้ที่ Line ID: @156subqf
+            หรือกดปุ่มด้านล่างเพื่อเพิ่มเพื่อน
+          </Text>
+          <VStack mt={3}>
+            <Button
+              colorScheme="teal"
+              width="100%"
+              onClick={
+                //href to another site
+                () => window.open("https://lin.ee/Is71r3U")
+              }
+            >
+              Add Line Friend
+            </Button>
+          </VStack>
         </Container>
         {status && (
           <Alert status={variant} mt={4}>
