@@ -379,7 +379,7 @@ export default function ChakraRegister() {
             {/*<option value="1">นักเรียนโรงเรียนสาธิตจุฬาฯ ฝ่ายมัธยม</option>*/}
             {/*<option value="2">นักเรียนโรงเรียนสาธิตจุฬาฯ ฝ่ายประถม</option>*/}
             <option value="3">ผู้ปกครอง นร.สาธิตจุฬาฯ มัธยม</option>
-            /*<option value="4">บุคลากรโรงเรียนสาธิตจุฬาฯ</option>*/ /*
+            {/*<option value="4">บุคลากรโรงเรียนสาธิตจุฬาฯ</option>*/}
             <option value="6">ผู้ติดตามบุคคลากรโรงเรียนสาธิตจุฬาฯ</option>*/
             <option value="5">ศิษย์เก่าโรงเรียนสาธิตจุฬาฯ</option>
             <option value="7">
