@@ -45,6 +45,8 @@ import Instruction2 from "../assets/instructions2.jpg";
 import {
   validateAlumniStudent,
   validateCurrentStudent,
+  validateEmployee,
+  validateEmployeeGuardian,
   validateStudentGuardian,
 } from "../helper/validate";
 
@@ -97,6 +99,17 @@ export default function ChakraRegister() {
     return `${window.location.origin}${path}`;
   };
 
+  const statusText = [
+    "Error",
+    "นักเรียนโรงเรียนสาธิตจุฬาฯ ฝ่ายมัธยม",
+    "นักเรียนโรงเรียนสาธิตจุฬาฯ ฝ่ายประถม",
+    "ผู้ปกครอง นร.สาธิตจุฬาฯ มัธยม",
+    "บุคลากรโรงเรียนสาธิตจุฬาฯ",
+    "ศิษย์เก่าโรงเรียนสาธิตจุฬาฯ",
+    "ผู้ติดตามบุคคลากรโรงเรียนสาธิตจุฬาฯ",
+    "ศิษย์เก่าโรงเรียนสาธิตจุฬาฯ ฝ่ายมัธยมที่จบการศึกษาก่อนปี 2562",
+  ];
+
   const createUsers = async () => {
     //check all fields are filled
     const { data, error } = await supabase
@@ -120,7 +133,7 @@ export default function ChakraRegister() {
           password: password,
         },
       ]);
-      if (personStatus === "3") {
+      if (personStatus === "3" || personStatus === "6") {
         //create user in another talbe
         const { error2 } = await supabase.from("guardians").insert([
           {
@@ -131,7 +144,6 @@ export default function ChakraRegister() {
           },
         ]);
       }
-
       if (error) {
         setStatus("เกิดข้อผิดพลาดที่ไม่ทราบสาเหตุ กรุณาลองใหม่อีกครั้ง");
         setVariant("error");
@@ -142,7 +154,7 @@ export default function ChakraRegister() {
           event: "register",
           data: {
             name: name,
-            linkToDelete: interpolateUrl(`/deleteTicket/${id}/${password}`),
+            linkToDelete: interpolateUrl(`/deleteTicket/${email}/${password}`),
           },
         });
         setStatus("ลงทะเบียนสำเร็จ!");
@@ -178,6 +190,7 @@ export default function ChakraRegister() {
           } else {
             if (await validateCurrentStudent(studentId, name)) {
               await createUsers();
+              break;
             } else {
               setStatus("รหัสนักเรียนไม่ถูกต้อง กรุณาตรวจสอบอีกครั้ง");
               setVariant("error");
@@ -208,9 +221,35 @@ export default function ChakraRegister() {
               )
             ) {
               await createUsers();
+              break;
             } else {
               setStatus(
                 "ข้อมูลนักเรียนในปกครองไม่ถูกต้องหรือโควตาลงทะเบียนของนักเรียนถูกใช้หมดแล้ว กรุณาตรวจสอบอีกครั้ง หรือติดต่อผ่าน Line Official"
+              );
+              setVariant("error");
+            }
+            break;
+          }
+        case "4":
+          //check all fields are filled
+          if (
+            name === "" ||
+            surname === "" ||
+            email === "" ||
+            personStatus === "" ||
+            studentId === "" ||
+            !validateEmail(email)
+          ) {
+            setStatus("กรุณากรอกข้อมูลให้ครบถ้วน");
+            setVariant("error");
+            break;
+          } else {
+            if (await validateEmployee(studentId, name)) {
+              await createUsers();
+              break;
+            } else {
+              setStatus(
+                "ข้อมูลบุคลากรไม่ถูกต้อง กรุณาตรวจสอบอีกครั้ง หรือติดต่อผ่าน Line Official"
               );
               setVariant("error");
             }
@@ -233,6 +272,7 @@ export default function ChakraRegister() {
           } else {
             if (await validateAlumniStudent(studentId, name, graduationYear)) {
               await createUsers();
+              break;
             } else {
               setStatus(
                 "ข้อมูลศิษย์เก่าไม่ถูกต้อง กรุณาตรวจสอบอีกครั้ง หรือติดต่อผ่าน Line Official"
@@ -242,6 +282,32 @@ export default function ChakraRegister() {
 
             break;
           }
+        case "6":
+          //check all fields are filled
+          if (
+            name === "" ||
+            surname === "" ||
+            email === "" ||
+            personStatus === "" ||
+            studentId === "" ||
+            !validateEmail(email) ||
+            studentName === ""
+          ) {
+            setStatus("กรุณากรอกข้อมูลให้ครบถ้วน");
+            setVariant("error");
+            break;
+          } else {
+            if (await validateEmployeeGuardian(studentId, studentName)) {
+              await createUsers();
+              break;
+            } else {
+              setStatus(
+                "ข้อมูลบุคลากรไม่ถูกต้อง กรุณาตรวจสอบอีกครั้ง หรือติดต่อผ่าน Line Official"
+              );
+              setVariant("error");
+            }
+          }
+
         case "7":
           //check all fields are filled
           if (
@@ -313,8 +379,8 @@ export default function ChakraRegister() {
             {/*<option value="1">นักเรียนโรงเรียนสาธิตจุฬาฯ ฝ่ายมัธยม</option>*/}
             {/*<option value="2">นักเรียนโรงเรียนสาธิตจุฬาฯ ฝ่ายประถม</option>*/}
             <option value="3">ผู้ปกครอง นร.สาธิตจุฬาฯ มัธยม</option>
-            {/*<option value="4">บุคลากรโรงเรียนสาธิตจุฬาฯ</option>*/}
-            {/*<option value="6">ผู้ติดตามบุคคลากรโรงเรียนสาธิตจุฬาฯ</option>*/}
+            /*<option value="4">บุคลากรโรงเรียนสาธิตจุฬาฯ</option>*/ /*
+            <option value="6">ผู้ติดตามบุคคลากรโรงเรียนสาธิตจุฬาฯ</option>*/
             <option value="5">ศิษย์เก่าโรงเรียนสาธิตจุฬาฯ</option>
             <option value="7">
               ศิษย์เก่าโรงเรียนสาธิตจุฬาฯ ฝ่ายมัธยมที่จบการศึกษาก่อนปี 2562
@@ -383,6 +449,17 @@ export default function ChakraRegister() {
             </FormControl>
           </FormControl>
         )}
+        {personStatus === "4" && (
+          <FormControl mt={3}>
+            <FormLabel>โปรดระบุเลขประจำตัวบุคลากร</FormLabel>
+            <Input
+              type="text"
+              placeholder="Employee ID"
+              value={studentId}
+              onChange={(e) => setStudentId(e.target.value)}
+            />
+          </FormControl>
+        )}
         {personStatus === "5" && (
           <FormControl mt={3}>
             <FormLabel>โปรดระบุเลขประจำตัวนักเรียน</FormLabel>
@@ -401,6 +478,28 @@ export default function ChakraRegister() {
                 placeholder="Graduation Year"
                 value={graduationYear}
                 onChange={(e) => setGraduationYear(e.target.value)}
+              />
+            </FormControl>
+          </FormControl>
+        )}
+        {personStatus === "6" && (
+          <FormControl mt={3}>
+            <FormLabel>โปรดระบุเลขประจำตัวบุคลากร</FormLabel>
+            <Input
+              type="text"
+              placeholder="Employee ID"
+              value={studentId}
+              onChange={(e) => setStudentId(e.target.value)}
+            />
+            <FormControl mt={2}>
+              <FormLabel>
+                โปรดระบุชื่อบุคลากร (กรอกเพียงแค่ชื่อ เช่น สิทธิชัย)
+              </FormLabel>
+              <Input
+                type="text"
+                placeholder="Employee Name"
+                value={studentName}
+                onChange={(e) => setStudentName(e.target.value)}
               />
             </FormControl>
           </FormControl>

@@ -73,3 +73,49 @@ export async function validateAlumniStudent(
   }
   return false;
 }
+
+export async function validateEmployee(employeeId, name) {
+  if (employeeId === "") return true;
+  const { data, error } = await supabase
+    .from("employees")
+    .select("*")
+    .eq("employeeID", employeeId)
+    .eq("Firstname", name);
+  if (error) {
+    console.log(error);
+    return false;
+  }
+  if (data.length > 0) {
+    return true;
+  }
+  return false;
+}
+
+export async function validateEmployeeGuardian(employeeId, employeeName) {
+  if (employeeId === "") return true;
+  const { data, error } = await supabase
+    .from("employees")
+    .select("*")
+    .eq("employeeID", employeeId)
+    .eq("Firstname", employeeName);
+  if (error) {
+    console.log(error);
+    return false;
+  }
+  if (data.length > 0) {
+    //check if guardian in guardian table in not exceed 2
+    const { data, error } = await supabase
+      .from("guardians")
+      .select("*")
+      .eq("studentID", employeeId);
+    if (error) {
+      console.log(error);
+      return false;
+    }
+    if (data.length < 2) {
+      return true;
+    }
+    return false;
+  }
+  return false;
+}

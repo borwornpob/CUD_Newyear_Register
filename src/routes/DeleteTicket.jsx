@@ -82,18 +82,37 @@ export default function DeleteTicket() {
   //handle Delete user with id
   const handleDelete = async (e) => {
     e.preventDefault();
-    setPersonStatus("loading");
+    setStatus("loading");
     if (id) {
       const { data, error } = await supabase
         .from("registered")
-        .delete()
+        .select("*")
         .eq("email", id);
+      if (data[0].personStatus === "4" || data[0].personStatus === "6") {
+        //detete user from registered and delete user from guardians
+        const { data, error } = await supabase
+          .from("registered")
+          .delete()
+          .eq("email", id);
+        if (error) {
+          setStatus("Error");
+          resetState();
+        }
+        const { data2, error2 } = await supabase
+          .from("guardians")
+          .delete()
+          .eq("email", id);
+        if (error2) {
+          setStatus("Error");
+          resetState();
+        } else {
+          setStatus("User deleted");
+          setVariant("success");
+        }
+      }
       if (error) {
         setStatus("Error");
         resetState();
-      } else {
-        setStatus("User deleted");
-        setVariant("success");
       }
     } else {
       setStatus("Error");
@@ -119,7 +138,7 @@ export default function DeleteTicket() {
     <Container>
       <VStack>
         <Heading>ลบข้อมูลการลงทะเบียน</Heading>
-        {status === "loadinืg" && (
+        {status === "loading" && (
           <Alert status="info" variant="solid">
             <AlertIcon />
             กำลังค้นหา...
@@ -142,8 +161,9 @@ export default function DeleteTicket() {
             <Card maxW="md" boxShadow="md">
               <CardBody>
                 <VStack p={0}>
-                  <QRCode value={data[0].id.toString()} />
-                  <Heading size="md">{data[0].name}</Heading>
+                  <Heading size="md">
+                    {data[0].name} {data[0].surname}
+                  </Heading>
                   <Text>{data[0].email}</Text>
                   <Text>{statusText[data[0].status]}</Text>
                 </VStack>
