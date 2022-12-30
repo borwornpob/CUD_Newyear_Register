@@ -38,6 +38,7 @@ import {
 } from "@chakra-ui/react";
 import useWindowDimensions from "../hooks/dimensions";
 import { plunk } from "../helper/plunk";
+import { Link as routerLink } from "react-router-dom";
 
 import Instruction1 from "../assets/instructions1.jpg";
 import Instruction2 from "../assets/instructions2.jpg";
@@ -522,6 +523,25 @@ export default function ChakraRegister() {
             mt={2}
           >
             ลงทะเบียน
+          </Button>
+        </Container>
+        <Container p={0}>
+          <Text>
+            เมื่อลงทะเบียนสำเร็จแล้วให้คลิกปุ่ม ค้นหาบัตร เพื่อบันทึกภาพ QRCode
+            เพื่อใช้แสดงการเข้างาน ณ ประตู 5 (สามารถเข้าได้งานได้ตั้งแต่เวลา
+            16:00 - 19:30 น.)
+          </Text>
+        </Container>
+        <Container p={0}>
+          <Button
+            colorScheme="teal"
+            width="100%"
+            mt={2}
+            variant="outline"
+            as={routerLink}
+            to="/tickets"
+          >
+            ค้นหาบัตรเข้างานได้ที่นี่
           </Button>
         </Container>
         <Container p={0}>
