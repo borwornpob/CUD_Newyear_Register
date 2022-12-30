@@ -43,6 +43,8 @@ export default function Ticket() {
   const { width } = useWindowDimensions();
 
   const handleSubmit = async (e) => {
+    //remove space from id
+    setId(id.trim());
     e.preventDefault();
     setStatus("loading");
     if (id) {
@@ -98,7 +100,7 @@ export default function Ticket() {
             type="email"
             placeholder="Email"
             value={id}
-            onChange={(e) => setId(e.target.value)}
+            onChange={(e) => setId(e.target.value.toLowerCase())}
           />
         </FormControl>
         <Button colorScheme="teal" onClick={handleSubmit} width="100%">
