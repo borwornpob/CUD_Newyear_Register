@@ -95,7 +95,7 @@ export default function Ticket() {
         <FormControl id="id" isRequired>
           <FormLabel>กรุณากรอกอีเมลที่ลงทะเบียนไว้แล้ว</FormLabel>
           <Input
-            type="text"
+            type="email"
             placeholder="Email"
             value={id}
             onChange={(e) => setId(e.target.value)}
@@ -107,7 +107,7 @@ export default function Ticket() {
         {status === "loading" && (
           <Alert status="info" variant="solid">
             <AlertIcon />
-            กำลังค้นหา...
+            กำลังค้นหา..
           </Alert>
         )}
         {status === "Error" && (
