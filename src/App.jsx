@@ -27,6 +27,7 @@ export default function App() {
             path="/deleteTicket/:id/:password"
             element={<DeleteTicket />}
           />
+          <Route path="/emergency" element={<ChakraRegister />} />
           <Route path="/checkAtFront/:id" element={<CheckAtFront />} />
         </Routes>
         <Footer />
