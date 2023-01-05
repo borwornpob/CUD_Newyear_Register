@@ -2,6 +2,7 @@
 
 import React from "react";
 import { Text, VStack, Heading, Button, Container } from "@chakra-ui/react";
+import { Link as routerLink } from "react-router-dom";
 
 import useWindowDimensions from "../hooks/dimensions";
 
@@ -27,6 +28,20 @@ export default function ClosingRegister() {
           }
         >
           Add Friend
+        </Button>
+      </Container>
+
+      <Heading>สามารถค้นหาบัตรเข้างานได้ที่นี่</Heading>
+
+      <Container>
+        <Button
+          colorScheme="teal"
+          width="100%"
+          variant="solid"
+          as={routerLink}
+          to="/tickets"
+        >
+          ค้นหาบัตรเข้างานได้ที่นี่
         </Button>
       </Container>
     </VStack>
