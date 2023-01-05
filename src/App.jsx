@@ -12,6 +12,7 @@ import Header from "./components/Header";
 import Footer from "./components/Footer";
 import DeleteTicket from "./routes/DeleteTicket";
 import CheckAtFront from "./routes/CheckAtFront";
+import ClosingRegister from "./routes/ClosingRegister";
 
 export default function App() {
   return (
@@ -19,10 +20,9 @@ export default function App() {
       <BrowserRouter>
         <Header />
         <Routes>
-          <Route path="/" element={<ChakraRegister />} />
+          <Route path="/" element={<ClosingRegister />} />
           <Route path="/tickets" element={<Ticket />} />
           <Route path="*" element={<ErrorPage />} />
-          <Route path="/chakra" element={<ChakraRegister />} />
           <Route
             path="/deleteTicket/:id/:password"
             element={<DeleteTicket />}
