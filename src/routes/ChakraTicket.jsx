@@ -100,7 +100,7 @@ export default function Ticket() {
             type="email"
             placeholder="Email"
             value={id}
-            onChange={(e) => setId(e.target.value.toLowerCase())}
+            onChange={(e) => setId(e.target.value)}
           />
         </FormControl>
         <Button colorScheme="teal" onClick={handleSubmit} width="100%">
@@ -119,10 +119,18 @@ export default function Ticket() {
           </Alert>
         )}
         {status === "No user found" && (
-          <Alert status="error" variant="solid">
-            <AlertIcon />
-            ไม่พบอีเมลนี้ในระบบ กรุณาตรวจสอบอีกครั้ง
-          </Alert>
+          <Container p={0}>
+            <Container p={0}>
+              <Alert status="error" variant="solid">
+                <AlertIcon />
+                ไม่พบอีเมลนี้ในระบบ กรุณาตรวจสอบอีกครั้ง
+              </Alert>
+            </Container>
+            <Text>
+              หากลงทะเบียนแล้วค้นหาบัตรไม่พบ
+              กรุณาลองตรวจสอบตัวพิมพ์เล็กพิมพ์ใหญ่อีกครั้งหนึ่ง
+            </Text>
+          </Container>
         )}
         {status === "User found" && (
           <VStack>
